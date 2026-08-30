@@ -1,10 +1,10 @@
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { BeverageSize } from '../beverages/beverage-size.entity';
-import { OrderItem } from './order-item.entity';
-import { Order } from './order.entity';
-import { OrdersService } from './orders.service';
+import { BeverageSize } from '../beverages/beverage-size.entity.js';
+import { OrderItem } from './order-item.entity.js';
+import { Order } from './order.entity.js';
+import { OrdersService } from './orders.service.js';
 
 describe('OrdersService', () => {
   const ordersRepository = {

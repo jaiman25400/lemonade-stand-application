@@ -5,7 +5,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { OrderItem } from './order-item.entity';
+import type { OrderItem } from './order-item.entity.js';
 
 @Entity({ name: 'orders' })
 export class Order {
@@ -35,7 +35,7 @@ export class Order {
   })
   total!: number;
 
-  @OneToMany(() => OrderItem, (item) => item.order, { cascade: true })
+  @OneToMany('OrderItem', (item: OrderItem) => item.order, { cascade: true })
   items!: OrderItem[];
 
   @CreateDateColumn({ type: 'timestamptz' })

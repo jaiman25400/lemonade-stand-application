@@ -5,15 +5,15 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BeverageSize } from '../beverages/beverage-size.entity';
-import { isUniqueViolation } from '../common/database/postgres-error';
-import { fromCents, toCents } from '../common/money';
-import { createConfirmationNumber } from './confirmation-number';
-import { CreateOrderDto, CreateOrderItemDto } from './dto/create-order.dto';
-import { OrderResponseDto } from './dto/order-response.dto';
-import { OrderItem } from './order-item.entity';
-import { Order } from './order.entity';
-import { toOrderResponse } from './order.mapper';
+import { BeverageSize } from '../beverages/beverage-size.entity.js';
+import { isUniqueViolation } from '../common/database/postgres-error.js';
+import { fromCents, toCents } from '../common/money.js';
+import { createConfirmationNumber } from './confirmation-number.js';
+import { CreateOrderDto, CreateOrderItemDto } from './dto/create-order.dto.js';
+import { OrderResponseDto } from './dto/order-response.dto.js';
+import { OrderItem } from './order-item.entity.js';
+import { Order } from './order.entity.js';
+import { toOrderResponse } from './order.mapper.js';
 
 const CONFIRMATION_ATTEMPTS = 3;
 

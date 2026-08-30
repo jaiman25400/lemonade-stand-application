@@ -5,7 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Order } from './order.entity';
+import { Order } from './order.entity.js';
 
 @Entity({ name: 'order_items' })
 export class OrderItem {

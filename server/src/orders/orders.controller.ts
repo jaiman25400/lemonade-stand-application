@@ -11,9 +11,9 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { OrderResponseDto } from './dto/order-response.dto';
-import { OrdersService } from './orders.service';
+import { CreateOrderDto } from './dto/create-order.dto.js';
+import { OrderResponseDto } from './dto/order-response.dto.js';
+import { OrdersService } from './orders.service.js';
 
 @ApiTags('orders')
 @Controller('orders')
