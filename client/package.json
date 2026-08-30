@@ -8,6 +8,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "openapi:pull": "node ./scripts/pull-openapi.mjs",
     "generate:api": "kubb generate"
   },
@@ -42,10 +44,13 @@
   "devDependencies": {
     "@kubb/plugin-fetch": "^5.1.1",
     "@kubb/plugin-ts": "^5.0.0",
+    "@types/jest": "^30.0.0",
     "@types/react": "~19.1.0",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0",
+    "jest": "^30.0.0",
     "kubb": "^5.0.4",
+    "ts-jest": "^29.2.5",
     "typescript": "~5.9.2"
   },
   "private": true

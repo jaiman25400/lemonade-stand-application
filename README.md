@@ -128,12 +128,17 @@ npm run generate:api
 
 ---
 
-## Tests (API)
+## Tests
 
 ```bash
+# API (Nest)
 cd server
 npm test
 npm run test:e2e
+
+# App (Jest — cart, checkout validation, API error mapping)
+cd client
+npm test
 ```
 
 ---

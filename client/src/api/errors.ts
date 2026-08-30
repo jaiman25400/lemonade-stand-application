@@ -99,3 +99,11 @@ export function toApiError(error: unknown): ApiError {
 
   return new ApiError("Something went wrong. Try again.", "unknown");
 }
+
+/** Retry GET once on network failure only. Never retry 4xx/5xx or timeouts. */
+export function shouldRetryQuery(failureCount: number, error: unknown): boolean {
+  if (error instanceof ApiError && error.kind !== "network") {
+    return false;
+  }
+  return failureCount < 1;
+}
