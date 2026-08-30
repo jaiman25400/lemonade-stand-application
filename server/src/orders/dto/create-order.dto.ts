@@ -16,7 +16,7 @@ import {
   Validate,
   ValidateNested,
 } from 'class-validator';
-import { AtLeastOneContactConstraint } from './at-least-one-contact.constraint.js';
+import { AtLeastOneContactConstraint } from './at-least-one-contact.constraint';
 
 function trimString({ value }: { value: unknown }): unknown {
   return typeof value === 'string' ? value.trim() : value;

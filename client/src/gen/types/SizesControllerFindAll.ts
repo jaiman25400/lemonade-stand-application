@@ -3,9 +3,9 @@
 * Do not edit manually.
 */
 
-import type { Size } from './Size'
+import type { SizeResponseDto } from './SizeResponseDto'
 
-export type SizesControllerFindAllStatus200 = Size[];
+export type SizesControllerFindAllStatus200 = SizeResponseDto[];
 
 export type SizesControllerFindAllOptions = {
     body?: never;

@@ -6,8 +6,9 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { Beverage } from './beverage.entity';
+import { moneyColumn } from '../common/database/money.column';
 import { Size } from '../sizes/size.entity';
+import { Beverage } from './beverage.entity';
 
 @Entity({ name: 'beverage_sizes' })
 @Unique('UQ_beverage_sizes_beverage_size', ['beverage', 'size'])
@@ -25,14 +26,6 @@ export class BeverageSize {
   @JoinColumn({ name: 'size_id' })
   size!: Size;
 
-  @Column({
-    type: 'numeric',
-    precision: 10,
-    scale: 2,
-    transformer: {
-      to: (value: number) => value.toFixed(2),
-      from: (value: string) => Number(value),
-    },
-  })
+  @Column(moneyColumn)
   price!: number;
 }

@@ -12,8 +12,16 @@ export type OrderResponseDto = {
     */
     confirmationNumber: string;
     customerName: string;
-    phone?: object;
-    email?: object;
+    /**
+     * @example +1 416 555 0100
+     * @type string
+    */
+    phone: string | null;
+    /**
+     * @example ada@example.com
+     * @type string
+    */
+    email: string | null;
     items: OrderItemResponseDto[];
     /**
      * @example 6

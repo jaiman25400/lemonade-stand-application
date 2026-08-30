@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class OrderItemResponseDto {
   @ApiProperty()
@@ -24,10 +24,12 @@ export class OrderResponseDto {
   @ApiProperty()
   customerName!: string;
 
-  @ApiPropertyOptional()
+  // `type` is explicit because Swagger cannot infer a `string | null` union
+  // from emitted metadata and would otherwise publish these as `object`.
+  @ApiProperty({ type: String, nullable: true, example: '+1 416 555 0100' })
   phone!: string | null;
 
-  @ApiPropertyOptional()
+  @ApiProperty({ type: String, nullable: true, example: 'ada@example.com' })
   email!: string | null;
 
   @ApiProperty({ type: [OrderItemResponseDto] })

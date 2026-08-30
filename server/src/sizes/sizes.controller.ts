@@ -18,8 +18,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateSizeDto } from './dto/create-size.dto';
+import { SizeResponseDto } from './dto/size-response.dto';
 import { UpdateSizeDto } from './dto/update-size.dto';
-import { Size } from './size.entity';
 import { SizesService } from './sizes.service';
 
 @ApiTags('sizes')
@@ -28,31 +28,31 @@ export class SizesController {
   constructor(private readonly sizesService: SizesService) {}
 
   @Get()
-  @ApiOkResponse({ type: [Size] })
-  findAll(): Promise<Size[]> {
+  @ApiOkResponse({ type: [SizeResponseDto] })
+  findAll(): Promise<SizeResponseDto[]> {
     return this.sizesService.findAll();
   }
 
   @Get(':id')
-  @ApiOkResponse({ type: Size })
+  @ApiOkResponse({ type: SizeResponseDto })
   @ApiNotFoundResponse()
-  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Size> {
+  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<SizeResponseDto> {
     return this.sizesService.findOne(id);
   }
 
   @Post()
-  @ApiCreatedResponse({ type: Size })
-  create(@Body() dto: CreateSizeDto): Promise<Size> {
+  @ApiCreatedResponse({ type: SizeResponseDto })
+  create(@Body() dto: CreateSizeDto): Promise<SizeResponseDto> {
     return this.sizesService.create(dto);
   }
 
   @Patch(':id')
-  @ApiOkResponse({ type: Size })
+  @ApiOkResponse({ type: SizeResponseDto })
   @ApiNotFoundResponse()
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateSizeDto,
-  ): Promise<Size> {
+  ): Promise<SizeResponseDto> {
     return this.sizesService.update(id, dto);
   }
 

@@ -27,7 +27,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Size"
+                    "$ref": "#/components/schemas/SizeResponseDto"
                   }
                 }
               }
@@ -57,7 +57,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Size"
+                  "$ref": "#/components/schemas/SizeResponseDto"
                 }
               }
             }
@@ -87,7 +87,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Size"
+                  "$ref": "#/components/schemas/SizeResponseDto"
                 }
               }
             }
@@ -128,7 +128,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Size"
+                  "$ref": "#/components/schemas/SizeResponseDto"
                 }
               }
             }
@@ -509,9 +509,22 @@
   "servers": [],
   "components": {
     "schemas": {
-      "Size": {
+      "SizeResponseDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "example": "Small"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
       },
       "CreateSizeDto": {
         "type": "object",
@@ -735,10 +748,14 @@
             "type": "string"
           },
           "phone": {
-            "type": "object"
+            "type": "string",
+            "nullable": true,
+            "example": "+1 416 555 0100"
           },
           "email": {
-            "type": "object"
+            "type": "string",
+            "nullable": true,
+            "example": "ada@example.com"
           },
           "items": {
             "type": "array",
@@ -758,6 +775,8 @@
         "required": [
           "confirmationNumber",
           "customerName",
+          "phone",
+          "email",
           "items",
           "total",
           "createdAt"

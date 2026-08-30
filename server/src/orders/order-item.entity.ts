@@ -5,7 +5,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Order } from './order.entity.js';
+import { moneyColumn } from '../common/database/money.column';
+import { Order } from './order.entity';
 
 @Entity({ name: 'order_items' })
 export class OrderItem {
@@ -25,25 +26,9 @@ export class OrderItem {
   @Column({ type: 'int' })
   quantity!: number;
 
-  @Column({
-    type: 'numeric',
-    precision: 10,
-    scale: 2,
-    transformer: {
-      to: (value: number) => value.toFixed(2),
-      from: (value: string) => Number(value),
-    },
-  })
+  @Column(moneyColumn)
   unitPrice!: number;
 
-  @Column({
-    type: 'numeric',
-    precision: 10,
-    scale: 2,
-    transformer: {
-      to: (value: number) => value.toFixed(2),
-      from: (value: string) => Number(value),
-    },
-  })
+  @Column(moneyColumn)
   lineTotal!: number;
 }

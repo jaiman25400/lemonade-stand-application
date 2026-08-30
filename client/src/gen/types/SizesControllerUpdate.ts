@@ -3,14 +3,14 @@
 * Do not edit manually.
 */
 
-import type { Size } from './Size'
+import type { SizeResponseDto } from './SizeResponseDto'
 import type { UpdateSizeDto } from './UpdateSizeDto'
 
 export type SizesControllerUpdatePath = {
     id: string;
 };
 
-export type SizesControllerUpdateStatus200 = Size;
+export type SizesControllerUpdateStatus200 = SizeResponseDto;
 
 export type SizesControllerUpdateStatus404 = unknown;
 

@@ -5,7 +5,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import type { OrderItem } from './order-item.entity.js';
+import { moneyColumn } from '../common/database/money.column';
+import type { OrderItem } from './order-item.entity';
 
 @Entity({ name: 'orders' })
 export class Order {
@@ -24,15 +25,7 @@ export class Order {
   @Column({ type: 'varchar', length: 120, nullable: true })
   customerEmail!: string | null;
 
-  @Column({
-    type: 'numeric',
-    precision: 10,
-    scale: 2,
-    transformer: {
-      to: (value: number) => value.toFixed(2),
-      from: (value: string) => Number(value),
-    },
-  })
+  @Column(moneyColumn)
   total!: number;
 
   @OneToMany('OrderItem', (item: OrderItem) => item.order, { cascade: true })

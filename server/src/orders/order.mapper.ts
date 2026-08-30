@@ -1,5 +1,5 @@
-import { Order } from './order.entity.js';
-import { OrderResponseDto } from './dto/order-response.dto.js';
+import { OrderResponseDto } from './dto/order-response.dto';
+import { Order } from './order.entity';
 
 export function toOrderResponse(order: Order): OrderResponseDto {
   return {

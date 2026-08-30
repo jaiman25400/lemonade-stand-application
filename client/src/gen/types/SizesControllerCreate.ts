@@ -4,9 +4,9 @@
 */
 
 import type { CreateSizeDto } from './CreateSizeDto'
-import type { Size } from './Size'
+import type { SizeResponseDto } from './SizeResponseDto'
 
-export type SizesControllerCreateStatus201 = Size;
+export type SizesControllerCreateStatus201 = SizeResponseDto;
 
 export type SizesControllerCreateBody = CreateSizeDto;
 

@@ -173,7 +173,7 @@ The client suite is unit-level. There are no rendered-component tests; the logic
 
 - **One public repo, `/client` and `/server`.** HTTP only between them. No shared runtime.
 - **Nest modules** for health, sizes, beverages, and orders (controllers / services / DTOs / entities).
-- **Money in integer cents** on the server, stored as `numeric(12,2)`. Order lines snapshot drink name, size name, and unit price so later catalog edits do not rewrite history.
+- **Money in integer cents** on the server, stored as `numeric(10,2)`. Order lines snapshot drink name, size name, and unit price so later catalog edits do not rewrite history.
 - **React Native:** Expo Router stack (Menu → Cart → Confirmation). Cart is React Context. Menu load and place-order use TanStack Query. The HTTP client is generated from Nest OpenAPI with [Kubb](https://kubb.dev) so types stay aligned with the API.
 - **Queries retry only transient network failures.** `POST /orders` never retries.
 - **Database in Docker, API on the host.** Compose runs Postgres. Nest stays on the machine so Expo Go on a phone can reach it via the LAN IP (`localhost` inside a container would not be the phone’s PC).
