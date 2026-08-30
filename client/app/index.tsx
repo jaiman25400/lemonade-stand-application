@@ -1,4 +1,5 @@
 import { useBeveragesQuery } from "@/src/api/hooks/use-beverages";
+import { userErrorMessage } from "@/src/api/errors";
 import { useCart } from "@/src/cart/cart-context";
 import { CartBadge } from "@/src/components/cart-badge";
 import { DrinkCard } from "@/src/components/drink-card";
@@ -44,9 +45,10 @@ export default function Index() {
     return (
       <View style={styles.centered}>
         <Text style={styles.error}>
-          {beveragesQuery.error instanceof Error
-            ? beveragesQuery.error.message
-            : "Could not load beverages"}
+          {userErrorMessage(
+            beveragesQuery.error,
+            "Could not load beverages",
+          )}
         </Text>
         <Pressable
           style={styles.retryButton}
@@ -132,7 +134,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.danger,
     textAlign: "center",
+    lineHeight: 22,
     marginBottom: 16,
+    maxWidth: 320,
   },
   retryButton: {
     backgroundColor: colors.primary,

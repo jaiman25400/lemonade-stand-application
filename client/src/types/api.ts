@@ -1,8 +1,6 @@
 export type { BeverageSizeOfferingDto as BeverageSize } from "@/src/gen/types/BeverageSizeOfferingDto";
 export type { BeverageResponseDto as Beverage } from "@/src/gen/types/BeverageResponseDto";
 export type { CreateOrderDto as CreateOrderPayload } from "@/src/gen/types/CreateOrderDto";
-export type { OrderItemResponseDto as OrderLine } from "@/src/gen/types/OrderItemResponseDto";
-
 import type { OrderItemResponseDto } from "@/src/gen/types/OrderItemResponseDto";
 
 /**

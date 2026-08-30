@@ -1,5 +1,6 @@
 import { ensureApiClient } from "@/src/api/configure-client";
-import { readKubbError, requestSignal } from "@/src/api/http";
+import { toApiError } from "@/src/api/errors";
+import { requestSignal } from "@/src/api/http";
 import { beveragesControllerFindAll } from "@/src/gen/clients/beverages/beveragesControllerFindAll";
 import type { Beverage } from "@/src/types/api";
 
@@ -14,6 +15,6 @@ export async function fetchBeverages(signal?: AbortSignal): Promise<Beverage[]> 
     }
     return result.data;
   } catch (error) {
-    throw new Error(readKubbError(error));
+    throw toApiError(error);
   }
 }

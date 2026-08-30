@@ -1,4 +1,5 @@
 import { useCreateOrderMutation } from "@/src/api/hooks/use-create-order";
+import { userErrorMessage } from "@/src/api/errors";
 import { useCart } from "@/src/cart/cart-context";
 import { cartLineTotal } from "@/src/cart/cart";
 import { QuantityStepper } from "@/src/components/quantity-stepper";
@@ -157,9 +158,10 @@ export default function CartScreen() {
       </Text>
       {placeOrder.isError ? (
         <Text style={styles.submitError}>
-          {placeOrder.error instanceof Error
-            ? placeOrder.error.message
-            : "Could not place the order"}
+          {userErrorMessage(
+            placeOrder.error,
+            "Could not place the order",
+          )}
         </Text>
       ) : null}
       <Pressable
@@ -458,6 +460,7 @@ const styles = StyleSheet.create({
   submitError: {
     color: colors.danger,
     fontSize: 14,
+    lineHeight: 20,
     marginBottom: 10,
   },
   primaryButtonDisabled: {

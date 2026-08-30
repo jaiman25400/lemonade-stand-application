@@ -1,5 +1,6 @@
 import { ensureApiClient } from "@/src/api/configure-client";
-import { readKubbError, requestSignal } from "@/src/api/http";
+import { toApiError } from "@/src/api/errors";
+import { requestSignal } from "@/src/api/http";
 import { ordersControllerCreate } from "@/src/gen/clients/orders/ordersControllerCreate";
 import type { OrderResponseDto } from "@/src/gen/types/OrderResponseDto";
 import type { CreateOrderPayload, OrderResponse } from "@/src/types/api";
@@ -25,8 +26,11 @@ export async function createOrder(
       body: payload,
       signal: requestSignal(),
     });
+    if (!result.data) {
+      throw new Error("The server did not return an order confirmation");
+    }
     return toOrderResponse(result.data);
   } catch (error) {
-    throw new Error(readKubbError(error));
+    throw toApiError(error);
   }
 }

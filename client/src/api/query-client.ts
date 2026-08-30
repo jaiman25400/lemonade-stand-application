@@ -1,10 +1,16 @@
+import { ApiError } from "@/src/api/errors";
 import { QueryClient, focusManager } from "@tanstack/react-query";
 import { AppState, Platform } from "react-native";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 1,
+      retry: (failureCount, error) => {
+        if (error instanceof ApiError && error.kind !== "network") {
+          return false;
+        }
+        return failureCount < 1;
+      },
       staleTime: 30_000,
     },
     mutations: {

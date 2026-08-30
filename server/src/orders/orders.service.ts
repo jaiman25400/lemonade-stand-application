@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -91,7 +92,9 @@ export class OrdersService {
       }
     }
 
-    throw new Error('Could not allocate a confirmation number');
+    throw new InternalServerErrorException(
+      'Could not allocate a confirmation number',
+    );
   }
 
   async findByConfirmationNumber(
