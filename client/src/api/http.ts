@@ -1,22 +1,40 @@
 const REQUEST_TIMEOUT_MS = 10_000;
 
-function timeoutSignal(): AbortSignal {
-  if (typeof AbortSignal.timeout === "function") {
-    return AbortSignal.timeout(REQUEST_TIMEOUT_MS);
-  }
-
-  const controller = new AbortController();
-  setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
-  return controller.signal;
+function timeoutReason(): Error {
+  const error = new Error("Request timed out");
+  error.name = "AbortError";
+  return error;
 }
 
+/**
+ * Caller cancellation (TanStack Query) plus a request deadline.
+ *
+ * Combined by hand rather than with `AbortSignal.any`, which is missing on some
+ * React Native runtimes. Falling back to the caller's signal there would drop
+ * the deadline silently and let a dead API hang until the socket gives up.
+ */
 export function requestSignal(external?: AbortSignal): AbortSignal {
-  const timeout = timeoutSignal();
-  if (!external) {
-    return timeout;
+  const controller = new AbortController();
+  const timer = setTimeout(
+    () => controller.abort(timeoutReason()),
+    REQUEST_TIMEOUT_MS,
+  );
+
+  controller.signal.addEventListener("abort", () => clearTimeout(timer), {
+    once: true,
+  });
+
+  if (external) {
+    if (external.aborted) {
+      controller.abort(external.reason);
+    } else {
+      external.addEventListener(
+        "abort",
+        () => controller.abort(external.reason),
+        { once: true },
+      );
+    }
   }
-  if (typeof AbortSignal.any === "function") {
-    return AbortSignal.any([external, timeout]);
-  }
-  return external;
+
+  return controller.signal;
 }

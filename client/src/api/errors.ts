@@ -43,19 +43,26 @@ function isAbort(error: unknown): boolean {
   return error instanceof Error && error.name === "AbortError";
 }
 
+/**
+ * Fetch rejects with a TypeError when the host is unreachable, but so does
+ * ordinary broken code. Match the message, not the constructor, so a genuine
+ * bug is not disguised as an outage.
+ */
+const NETWORK_MESSAGES = [
+  "network request failed",
+  "failed to fetch",
+  "network error",
+  "econnrefused",
+  "internet connection",
+  "load failed",
+];
+
 function isNetworkFailure(error: unknown): boolean {
   if (!(error instanceof Error)) {
     return false;
   }
   const message = error.message.toLowerCase();
-  return (
-    error.name === "TypeError" ||
-    message.includes("network request failed") ||
-    message.includes("failed to fetch") ||
-    message.includes("network error") ||
-    message.includes("econnrefused") ||
-    message.includes("internet connection")
-  );
+  return NETWORK_MESSAGES.some((fragment) => message.includes(fragment));
 }
 
 /** Maps transport / Nest failures to a message the customer can act on. */

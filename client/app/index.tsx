@@ -61,6 +61,11 @@ export default function Index() {
   }
 
   const beverages = beveragesQuery.data ?? [];
+  // Reaching here with an error means a refresh failed over cached drinks.
+  // Without a banner that failure is invisible: the spinner just retracts.
+  const refreshError = beveragesQuery.isError
+    ? userErrorMessage(beveragesQuery.error, "Could not refresh the menu")
+    : null;
 
   return (
     <FlatList
@@ -78,6 +83,19 @@ export default function Index() {
         <View style={styles.header}>
           <Text style={styles.kicker}>Today</Text>
           <Text style={styles.heading}>Drinks</Text>
+          {refreshError ? (
+            <View style={styles.banner}>
+              <Text style={styles.bannerText}>{refreshError}</Text>
+              <Pressable
+                onPress={() => void beveragesQuery.refetch()}
+                hitSlop={8}
+                accessibilityRole="button"
+                accessibilityLabel="Retry loading the menu"
+              >
+                <Text style={styles.bannerAction}>Retry</Text>
+              </Pressable>
+            </View>
+          ) : null}
         </View>
       }
       ListEmptyComponent={
@@ -123,6 +141,30 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: "700",
     color: colors.primary,
+  },
+  banner: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 12,
+    marginTop: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.danger,
+    backgroundColor: colors.dangerMuted,
+  },
+  bannerText: {
+    flex: 1,
+    fontSize: 13,
+    lineHeight: 18,
+    color: colors.danger,
+  },
+  bannerAction: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: colors.danger,
   },
   muted: {
     fontSize: 16,

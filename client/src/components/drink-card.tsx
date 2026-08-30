@@ -1,5 +1,6 @@
 import { QuantityStepper } from "@/src/components/quantity-stepper";
 import { formatPrice } from "@/src/lib/money";
+import { resolveSelectedSize } from "@/src/cart/select-size";
 import type { CartItem } from "@/src/cart/cart";
 import { colors } from "@/src/theme";
 import type { Beverage } from "@/src/types/api";
@@ -24,7 +25,7 @@ export function DrinkCard({ beverage, onAdd }: DrinkCardProps) {
   const [justAdded, setJustAdded] = useState(false);
   const addedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const scale = useSharedValue(1);
-  const selectedSize = beverage.sizes.find((size) => size.id === sizeId);
+  const selectedSize = resolveSelectedSize(beverage.sizes, sizeId);
   const addStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
@@ -70,12 +71,15 @@ export function DrinkCard({ beverage, onAdd }: DrinkCardProps) {
       ) : (
         <>
           {beverage.sizes.map((size) => {
-            const selected = size.id === sizeId;
+            const selected = size.id === selectedSize?.id;
             return (
               <Pressable
                 key={size.id}
                 style={[styles.sizeRow, selected && styles.sizeRowSelected]}
                 onPress={() => setSizeId(size.id)}
+                accessibilityRole="radio"
+                accessibilityState={{ selected }}
+                accessibilityLabel={`${size.name}, ${formatPrice(size.price)}`}
               >
                 <Text style={styles.sizeName}>{size.name}</Text>
                 <Text style={styles.sizePrice}>{formatPrice(size.price)}</Text>

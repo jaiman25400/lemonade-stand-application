@@ -24,26 +24,35 @@ lemonade-stand-application/
 
 ## Setup, build, and run
 
-### 1. Database
+### 1. Backend — database + API
 
-From the repository root:
+Start from the **repository root** and paste the whole block. It starts PostgreSQL, creates the `.env`, installs dependencies, and runs the API in watch mode.
+
+**macOS / Linux**
 
 ```bash
 docker compose up -d
-```
-
-PostgreSQL is on **localhost:5433** (container port 5432) so it does not collide with a local Postgres on 5432.
-
-### 2. Backend (`/server`)
-
-```bash
 cd server
-cp .env.example .env   # Windows: copy .env.example .env
+cp .env.example .env
 npm install
-npm run start:dev      # watch mode for local development
+npm run start:dev
 ```
 
-Production-style build (optional):
+**Windows (PowerShell)**
+
+```powershell
+docker compose up -d
+cd server
+Copy-Item .env.example .env -Force
+npm install
+npm run start:dev
+```
+
+Wait for `API listening on http://localhost:3000/api` in the terminal. Tables are created on first boot, so there is no migration step. If Postgres is still starting, TypeORM retries the connection automatically.
+
+PostgreSQL runs on **localhost:5433** (container port 5432) so it does not collide with a local Postgres on 5432. Leave this terminal running.
+
+Production-style build instead of watch mode (optional):
 
 ```bash
 cd server
@@ -61,9 +70,9 @@ npm run start:prod
 
 On Windows, allow inbound **3000** (API) and **8081** (Metro) if you use a physical phone.
 
-### 3. Frontend (`/client`)
+### 2. Frontend (`/client`)
 
-Keep Nest running. In a second terminal:
+Leave the API running. Open a **second terminal** at the repository root and paste:
 
 ```bash
 cd client
@@ -100,14 +109,51 @@ Fix the cause, then tap **Retry** (menu) or **Place order** again (cart).
 
 ## Tests
 
+### API — unit tests
+
+Services with mocked repositories. No database needed.
+
 ```bash
 cd server
 npm test
-npm run test:e2e
+```
 
+Covers the order total being computed from catalog prices (never the client), duplicate lines merging before pricing, rejecting items that are not on the menu, and `NotFoundException` for unknown ids.
+
+### API — integration tests
+
+Boots the real Nest application with the real validation pipe and exception filter, and drives it over HTTP with `supertest` against **the running PostgreSQL container**.
+
+```bash
+# Postgres must be up and server/.env must exist — see step 1 above
+docker compose up -d
+cd server
+npm run test:e2e
+```
+
+Eight scenarios in `server/test/app.e2e-spec.ts`:
+
+| Scenario | What it proves |
+| --- | --- |
+| `GET /api/health` | App boots with the global `/api` prefix |
+| `GET /api/beverages` | Catalog endpoint returns a list |
+| Beverage create → read → update → delete | Full admin CRUD round trip, then 404 after delete |
+| Link size + price to a beverage | Sizes, pricing, and unlink work end to end |
+| **Place an order** | Server computes `total` from catalog prices and issues an `LS-XXXXXXXX` confirmation |
+| **Re-read the order after a price change** | Line prices are snapshotted — the historic order still totals the original amount |
+| Order with a client-supplied `total`, and order with no contact | Both rejected with `400` |
+| Unknown route | Consistent error body (`statusCode`, `message`, `path`, `timestamp`) |
+
+### App — unit tests
+
+```bash
 cd client
 npm test
 ```
+
+Cart behaviour (merging lines, totals, quantity cap), checkout validation (name plus phone **or** email), size reconciliation after a catalog refetch, request timeout and cancellation, and API error mapping for network / timeout / 4xx / 5xx.
+
+The client suite is unit-level. There are no rendered-component tests; the logic that would drive them is extracted into pure modules and tested directly.
 
 ---
 
@@ -136,7 +182,7 @@ npm test
 
 ## Bonus features
 
-1. **Unit / integration tests** — Nest: service specs (orders total from catalog prices, merge lines, reject unknown sizes) plus e2e. React Native: Jest specs for cart merge/totals, customer validation (name + phone or email), and API error mapping (network, timeout, 4xx, 5xx).
+1. **Unit and integration tests** — Nest has unit specs over mocked repositories plus an **integration suite** that drives the real app over HTTP against PostgreSQL (admin CRUD, order placement with a server-calculated total, price snapshotting, validation rejections, error-body shape). The React Native app has unit specs for cart logic, checkout validation, size reconciliation, request timeouts, and API error mapping. See [Tests](#tests).
 2. **Input validation** — Client: name, email format, 10-digit phone, contact required. Nest: `class-validator` DTOs, whitelist, at-least-one contact, quantity bounds.
 3. **State management** — React Context for cart + customer fields; TanStack Query for server state (menu cache, mutation for checkout).
 4. **Containerization** — `docker-compose.yml` runs PostgreSQL 16 with a named volume and healthcheck.

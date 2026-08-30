@@ -37,6 +37,15 @@ describe("toApiError", () => {
     expect(error.message).toMatch(/can't reach the api/i);
   });
 
+  it("does not disguise a genuine TypeError as an outage", () => {
+    const error = toApiError(
+      new TypeError("Cannot read properties of undefined (reading 'sizes')"),
+    );
+
+    expect(error.kind).toBe("unknown");
+    expect(error.message).toMatch(/reading 'sizes'/);
+  });
+
   it("surfaces Nest validation text on 4xx", () => {
     const error = toApiError(
       httpError(400, { message: "phone must be a valid phone number" }),
